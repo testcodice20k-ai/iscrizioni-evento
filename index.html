@@ -1,327 +1,105 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evento Partecipanti</title>
 
-  <title>Iscrizione Evento</title>
+<style>
+body {
+  margin:0;
+  font-family: Arial;
+  background:#f7f7fb;
+  color:#2b2b2b;
+}
 
-  <style>
-    :root {
-      --bg: #000;
-      --panel: #111;
-      --yellow: #ffd400;
-      --text: #fff;
-      --muted: #b8b8b8;
-      --danger: #ff3b30;
-      --warning: #ff9500;
-      --ok: #32d74b;
-    }
+.container {
+  max-width:500px;
+  margin:auto;
+  padding:20px;
+}
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      padding: 20px;
-    }
+.card {
+  background:white;
+  border-radius:20px;
+  padding:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
 
-    .container {
-      max-width: 760px;
-      margin: auto;
-    }
+h1 {
+  text-align:center;
+}
 
-    .card {
-      background: var(--panel);
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 22px;
-      padding: 22px;
-      margin-bottom: 18px;
-      box-shadow: 0 12px 30px rgba(0,0,0,.35);
-    }
+.counter {
+  text-align:center;
+  font-size:1.5rem;
+  margin:10px 0;
+}
 
-    .event-name {
-      font-size: 2rem;
-      font-weight: 900;
-      color: var(--yellow);
-      margin-bottom: 8px;
-      text-align: center;
-    }
+.bar {
+  height:20px;
+  background:#eee;
+  border-radius:20px;
+  overflow:hidden;
+}
 
-    .subtitle {
-      text-align: center;
-      color: var(--muted);
-      margin-bottom: 22px;
-    }
+.bar-inner {
+  height:100%;
+  width:0%;
+  background:#a8c7ff;
+}
 
-    .counter {
-      font-size: 2.4rem;
-      font-weight: 900;
-      text-align: center;
-      margin-bottom: 8px;
-    }
+input {
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border-radius:10px;
+  border:1px solid #ddd;
+}
 
-    .free {
-      text-align: center;
-      color: var(--muted);
-      font-size: 1.1rem;
-      margin-bottom: 18px;
-    }
+button {
+  width:100%;
+  margin-top:15px;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  background:#a8c7ff;
+  font-weight:bold;
+}
 
-    .bar-wrap {
-      width: 100%;
-      height: 26px;
-      background: #2a2a2a;
-      border-radius: 999px;
-      overflow: hidden;
-      margin-bottom: 16px;
-    }
-
-    .bar {
-      height: 100%;
-      width: 0%;
-      background: var(--yellow);
-      border-radius: 999px;
-      transition: width .6s ease;
-    }
-
-    .status {
-      text-align: center;
-      font-weight: 900;
-      padding: 12px;
-      border-radius: 14px;
-      margin-top: 14px;
-      background: rgba(255,255,255,.08);
-    }
-
-    .status.open {
-      color: var(--ok);
-    }
-
-    .status.warning {
-      color: var(--warning);
-    }
-
-    .status.soldout {
-      color: var(--danger);
-    }
-
-    .last {
-      text-align: center;
-      color: var(--muted);
-      margin-top: 16px;
-    }
-
-    iframe {
-      width: 100%;
-      height: 1250px;
-      border: 0;
-      border-radius: 18px;
-      background: white;
-    }
-
-    .soldout-box {
-      display: none;
-      text-align: center;
-      padding: 28px;
-    }
-
-    .soldout-title {
-      font-size: 2rem;
-      color: var(--danger);
-      font-weight: 900;
-      margin-bottom: 10px;
-    }
-
-    .waiting-btn {
-      display: inline-block;
-      margin-top: 18px;
-      background: var(--yellow);
-      color: #000;
-      padding: 14px 22px;
-      border-radius: 999px;
-      font-weight: 900;
-      text-decoration: none;
-    }
-
-    .admin-box {
-      margin-top: 12px;
-      font-size: .9rem;
-      color: var(--muted);
-      text-align: center;
-    }
-
-    @media (max-width: 600px) {
-      body {
-        padding: 12px;
-      }
-
-      .event-name {
-        font-size: 1.55rem;
-      }
-
-      .counter {
-        font-size: 2rem;
-      }
-
-      iframe {
-        height: 1400px;
-      }
-    }
-  </style>
+.success {
+  text-align:center;
+  color:green;
+}
+</style>
 </head>
 
 <body>
 
 <div class="container">
 
-  <div class="card">
-    <div id="eventName" class="event-name"></div>
-    <div class="subtitle">Modulo iscrizione evento a numero chiuso</div>
+<div class="card">
 
-    <div id="counter" class="counter">-- / --</div>
-    <div id="freeSeats" class="free">Caricamento posti disponibili...</div>
+<h1 id="eventName">Evento Partecipanti</h1>
 
-    <div class="bar-wrap">
-      <div id="progressBar" class="bar"></div>
-    </div>
+<div class="counter" id="counter">0 / 50</div>
 
-    <div id="status" class="status">Controllo disponibilità...</div>
+<div class="bar">
+  <div class="bar-inner" id="bar"></div>
+</div>
 
-    <div id="lastName" class="last"></div>
-  </div>
+<input id="nome" placeholder="Nome">
+<input id="cognome" placeholder="Cognome">
 
-  <div id="formBox" class="card">
-    <iframe id="googleForm"></iframe>
-  </div>
+<button onclick="invia()">Iscriviti</button>
 
-  <div id="soldoutBox" class="card soldout-box">
-    <div class="soldout-title">POSTI ESAURITI</div>
-    <p>La capienza massima per questo evento è stata raggiunta.</p>
-    <p>Puoi comunque lasciare i tuoi dati in lista d’attesa.</p>
-
-    <a id="waitingListBtn" class="waiting-btn" href="#" target="_blank">
-      Entra in lista d’attesa
-    </a>
-  </div>
-
-  <div class="admin-box">
-    Dati aggiornati automaticamente.
-  </div>
+<div id="msg" class="success"></div>
 
 </div>
 
-<script>
-  /*
-    =========================
-    CONFIGURAZIONE EVENTO
-    =========================
-  */
+</div>
 
-  const CONFIG = {
-    nomeEvento: "EVENTO CHE MERAVIGLIA",
-    capienzaMassima: 130,
-
-    // Quando i posti liberi sono uguali o inferiori a questo numero,
-    // compare il messaggio "ULTIMI POSTI".
-    sogliaUltimiPosti: 10,
-
-    // Link del Google Form principale
-    googleFormUrl: "INCOLLA_QUI_LINK_GOOGLE_FORM_EMBED",
-
-    // Link eventuale lista d'attesa
-    listaAttesaUrl: "INCOLLA_QUI_LINK_LISTA_ATTESA",
-
-    /*
-      Qui devi mettere l’URL JSON che arriva da Google Apps Script.
-      Lo script dovrà restituire dati tipo:
-      {
-        "iscritti": 87,
-        "ultimo": "Marco Rossi"
-      }
-    */
-    datiUrl: "INCOLLA_QUI_URL_APPS_SCRIPT"
-  };
-
-
-  /*
-    =========================
-    CODICE PAGINA
-    =========================
-  */
-
-  const eventName = document.getElementById("eventName");
-  const counter = document.getElementById("counter");
-  const freeSeats = document.getElementById("freeSeats");
-  const progressBar = document.getElementById("progressBar");
-  const statusBox = document.getElementById("status");
-  const lastName = document.getElementById("lastName");
-  const googleForm = document.getElementById("googleForm");
-  const formBox = document.getElementById("formBox");
-  const soldoutBox = document.getElementById("soldoutBox");
-  const waitingListBtn = document.getElementById("waitingListBtn");
-
-  eventName.textContent = CONFIG.nomeEvento;
-  googleForm.src = CONFIG.googleFormUrl;
-  waitingListBtn.href = CONFIG.listaAttesaUrl;
-
-  async function caricaDati() {
-    try {
-      const response = await fetch(CONFIG.datiUrl);
-      const data = await response.json();
-
-      const iscritti = Number(data.iscritti || 0);
-      const ultimo = data.ultimo || "";
-      const max = CONFIG.capienzaMassima;
-
-      const liberi = Math.max(max - iscritti, 0);
-      const percentuale = Math.min((iscritti / max) * 100, 100);
-
-      counter.textContent = `${iscritti} / ${max}`;
-      freeSeats.textContent = `Posti disponibili: ${liberi}`;
-      progressBar.style.width = `${percentuale}%`;
-
-      if (ultimo) {
-        lastName.textContent = `Ultimo iscritto: ${ultimo}`;
-      } else {
-        lastName.textContent = "";
-      }
-
-      statusBox.classList.remove("open", "warning", "soldout");
-
-      if (iscritti >= max) {
-        statusBox.textContent = "EVENTO SOLD OUT";
-        statusBox.classList.add("soldout");
-
-        formBox.style.display = "none";
-        soldoutBox.style.display = "block";
-
-      } else if (liberi <= CONFIG.sogliaUltimiPosti) {
-        statusBox.textContent = `ULTIMI ${liberi} POSTI DISPONIBILI`;
-        statusBox.classList.add("warning");
-
-        formBox.style.display = "block";
-        soldoutBox.style.display = "none";
-
-      } else {
-        statusBox.textContent = "ISCRIZIONI APERTE";
-        statusBox.classList.add("open");
-
-        formBox.style.display = "block";
-        soldoutBox.style.display = "none";
-      }
-
-    } catch (error) {
-      statusBox.textContent = "Impossibile aggiornare i dati. Riprova più tardi.";
-      statusBox.classList.add("warning");
-    }
-  }
-
-  caricaDati();
-
-  // Aggiorna ogni 30 secondi
-  setInterval(caricaDati, 30000);
-</script>
+<script src="app.js"></script>
 
 </body>
 </html>
